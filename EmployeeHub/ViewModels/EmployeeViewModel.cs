@@ -140,7 +140,7 @@ namespace EmployeeHub.ViewModels
         /// </summary>  
         private async void GetEmployeeDetails()
         {
-            var employeeDetails = new EmployeeController().GetCall(APIUrls.emplist);
+            var employeeDetails = EmployeeController.GetCall(APIUrls.emplist);
             if (employeeDetails.Result.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 //Employees = employeeDetails.Result.Content.ReadAsAsync<List<Employee>>().Result;
@@ -165,26 +165,34 @@ namespace EmployeeHub.ViewModels
                name=Name,
                email=Email,
                gender=Gender,
-               status="active"
-               
+               status= Status
+
             };
-            var employeeDetails = new EmployeeController().PostCall(APIUrls.emplist, newEmployee);
+            var employeeDetails = EmployeeController.PostCall(APIUrls.emplist, newEmployee);
             if (employeeDetails.Result.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var result = await employeeDetails.Result.Content.ReadAsStringAsync();
-                var options = new JsonSerializerOptions
+                try
                 {
-                    PropertyNameCaseInsensitive = true
-                };
-                var resp = JsonSerializer.Deserialize<CreateEmployeeResponse>(result, options);
-                if(resp!=null && resp.code == 201)
-                {
-                    ShowPostMessage = newEmployee.name + "'s details has successfully been added!";
+                    var result = await employeeDetails.Result.Content.ReadAsStringAsync();
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+                    var resp = JsonSerializer.Deserialize<CreateEmployeeResponse>(result, options);
+                    if (resp != null && resp.code == 201)
+                    {
+                        ShowPostMessage = newEmployee.name + "'s details has successfully been added!";
+                    }
+                    else
+                    {
+                        ShowPostMessage = "Failed to update" + newEmployee.name + "'s details.";
+                    }
                 }
-                else
+                catch(Exception e)
                 {
-                    ShowPostMessage = "Failed to update" + newEmployee.name + "'s details.";
+                    ShowPostMessage = "Exception :" + e.InnerException!=null ? e.InnerException.Message : "Error happened";
                 }
+                
             }
             else
             {
@@ -193,39 +201,39 @@ namespace EmployeeHub.ViewModels
         }
 
 
-        ///// <summary>  
-        ///// Updates employee's record  
-        ///// </summary>  
-        ///// <param name="employee"></param>  
-        //private void UpdateEmployeeDetails(Employee employee)
-        //{
-        //    var employeeDetails = WebAPI.PutCall(API_URIs.employees + "?id=" + employee.ID, employee);
-        //    if (employeeDetails.Result.StatusCode == System.Net.HttpStatusCode.OK)
-        //    {
-        //        ResponseMessage = employee.FirstName + "'s details has successfully been updated!";
-        //    }
-        //    else
-        //    {
-        //        ResponseMessage = "Failed to update" + employee.FirstName + "'s details.";
-        //    }
-        //}
+        /// <summary>  
+        /// Updates employee's record  
+        /// </summary>  
+        /// <param name="employee"></param>  
+        private void UpdateEmployeeDetails(Employee employee)
+        {
+            var employeeDetails = EmployeeController.PutCall(APIUrls.emplist + "/"+ employee.Id,employee);
+            if (employeeDetails.Result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                ResponseMessage = employee.Name + "'s details has successfully been updated!";
+            }
+            else
+            {
+                ResponseMessage = "Failed to update" + employee.Name + "'s details.";
+            }
+        }
 
-        ///// <summary>  
-        ///// Deletes employee's record  
-        ///// </summary>  
-        ///// <param name="employee"></param>  
-        //private void DeleteEmployeeDetails(Employee employee)
-        //{
-        //    var employeeDetails = WebAPI.DeleteCall(API_URIs.employees + "?id=" + employee.ID);
-        //    if (employeeDetails.Result.StatusCode == System.Net.HttpStatusCode.OK)
-        //    {
-        //        ResponseMessage = employee.FirstName + "'s details has successfully been deleted!";
-        //    }
-        //    else
-        //    {
-        //        ResponseMessage = "Failed to delete" + employee.FirstName + "'s details.";
-        //    }
-        //}
+        /// <summary>  
+        /// Deletes employee's record  
+        /// </summary>  
+        /// <param name="employee"></param>  
+        private void DeleteEmployeeDetails(Employee employee)
+        {
+            var employeeDetails = EmployeeController.DeleteCall(APIUrls.emplist + "/" + employee.Id);
+            if (employeeDetails.Result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                ResponseMessage = employee.Name + "'s details has successfully been deleted!";
+            }
+            else
+            {
+                ResponseMessage = "Failed to delete" + employee.Name + "'s details.";
+            }
+        }
         #endregion
     }
 }

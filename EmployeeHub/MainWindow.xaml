@@ -156,6 +156,7 @@
                 Content="POST"        
                 HorizontalAlignment="Center"        
                 Margin="20 10 0 0"      
+                    Style="{Binding SubmitButtonStyle}"
                 Command="{Binding PostButtonClick}"  
                 CommandParameter="{Binding CreateEmployee}"
                 Grid.Row="4"        

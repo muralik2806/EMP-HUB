@@ -93,6 +93,7 @@
     <Compile Include="Controller\EmployeeController.cs" />
     <Compile Include="Models\EmployeeResponse.cs" />
     <Compile Include="Utilities\APIUrls.cs" />
+    <Compile Include="Utilities\JsonHelper.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
