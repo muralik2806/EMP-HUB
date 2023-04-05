@@ -197,6 +197,7 @@ namespace EmployeeHub.ViewModels
             else
             {
                 ShowPostMessage = "Failed to update" + newEmployee.name + "'s details.";
+
             }
         }
 
