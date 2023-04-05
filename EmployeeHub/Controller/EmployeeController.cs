@@ -31,6 +31,7 @@ namespace EmployeeHub.Controller
                     var response = client.GetAsync(apiUrl);
                     response.Wait();
                     return response;
+
                 }
             }
             catch (Exception ex)
